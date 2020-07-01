@@ -6,13 +6,16 @@ use Moo;
 # ABSTRACT: Class representing a C/C++ pre-processor macro
 # VERSION
 
-=head1 SYNOPSIS
-
 =head1 DESCRIPTION
+
+This class represents a single C/C++ pre-processor macro.  See L<C::Macros> for the
+interface for getting a list of these macros.
 
 =head1 PROPERTIES
 
 =head2 name
+
+The name of the macro.
 
 =cut
 
@@ -22,6 +25,10 @@ has name => (
 );
 
 =head2 value
+
+The value of the macro.  The representation may depend on the C<type>, or for
+C<other> type macros (typically for code macros), there is no sensible value,
+and this will be C<undef>.
 
 =cut
 
@@ -34,6 +41,9 @@ has value => (
 );
 
 =head2 type
+
+The macro type.  This will be one of: C<string>, C<integer>, C<float>,
+C<double> or C<other>.
 
 =cut
 
