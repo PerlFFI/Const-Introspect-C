@@ -192,17 +192,17 @@ sub run ($self)
 
   foreach my $line (split /\n/, $out)
   {
-    if($line =~ /^#define\s+(\S+)\s+(.*)$/)
+    if($line =~ /^#define\s+(\S+)\s+(.*)\s*$/)
     {
       my $name = $1;
       my $value = $2;
       next unless $name =~ $filter;
 
-      if($value =~ /^[0-9]+$/)
+      if($value =~ /^-?([1-9][0-9]*|0[0-7]*)$/)
       {
         push @macros, C::Macros::Macro->new(
           name  => $name,
-          value => $value,
+          value => int $value,
           type  => 'integer',
         )
       }
