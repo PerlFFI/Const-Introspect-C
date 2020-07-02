@@ -2,6 +2,7 @@ package Const::Introspect::C::Constant;
 
 use 5.020;
 use Moo;
+use experimental qw( signatures );
 
 # ABSTRACT: Class representing a C/C++ constant
 # VERSION
@@ -59,8 +60,16 @@ and this will be C<undef>.
 has value => (
   is      => 'ro',
   lazy    => 1,
-  default => sub {
-    die 'todo';
+  default => sub ($self) {
+    my $type = $self->type;
+    $type eq 'other'
+      ? undef
+      : do {
+        local $@ = '';
+        my $value = eval { $self->c->compute_expression_value($type, $self->name) };
+        # TODO: diagnostic on `fail`
+        $@ ? undef : $value;
+      };
   },
 );
 
@@ -78,8 +87,11 @@ has type => (
       unless $_[0] =~ /^(string|int|long|pointer|float|double|other)$/;
   },
   lazy     => 1,
-  default  => sub {
-    die 'todo';
+  default  => sub ($self) {
+    local $@ = '';
+    my $type = eval { $self->c->compute_expression_type($self->name) };
+    # TODO: diagnostic on `other`
+    $@ ? 'other' : $type;
   },
 );
 
