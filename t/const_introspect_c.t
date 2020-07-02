@@ -9,7 +9,7 @@ subtest 'basic' => sub {
   );
   isa_ok $macros, 'Const::Introspect::C';
 
-  my %macros = map { $_->name => $_ } $macros->run;
+  my %macros = map { $_->name => $_ } $macros->get_macro_constants;
 
   is(
     \%macros,
