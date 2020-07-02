@@ -9,6 +9,10 @@ use Text::ParseWords ();
 use Path::Tiny ();
 use Capture::Tiny qw( capture );
 use C::Macros::Macro;
+use Data::Section::Simple ();
+use Template ();
+use FFI::Platypus 1.00;
+use FFI::Build;
 
 # ABSTRACT: Find and evaluate C/C++ macros from Perl
 # VERSION
@@ -16,16 +20,16 @@ use C::Macros::Macro;
 =head1 SYNOPSIS
 
  use C::Macros;
-
+ 
  my $macros = C::Macros->new(
    headers => ['foo.h'],
  );
-
+ 
  foreach my $macro ($macros->run)
  {
    # macro isa C::Macros::Macro
    say "name  = ", $macro->name;
-   say "type  = ", $macro->type; # one of: integer, string, float, double or "other"
+   say "type  = ", $macro->type; # one of: int, string, float, double or "other"
    say "value = ", $macro->value;
  }
 
@@ -204,7 +208,7 @@ sub run ($self)
         push @macros, C::Macros::Macro->new(
           name  => $name,
           value => int $value,
-          type  => 'integer',
+          type  => 'int',
         )
       }
       elsif($value =~ /^"([a-z_0-9]+)"$/i)
@@ -239,6 +243,103 @@ sub run ($self)
   @macros;
 }
 
+=head2 compute_expression_type
+
+ my $type = $macros->compute_expression_type($expression);
+
+This attempts to compute the type of the C C<$expression>.  It should
+return one of C<int>, C<long>, C<string>, C<float>, C<double>, or C<other>.
+If the type cannot be determined then C<other> will be returned, and
+often indicates a code macro that doesn't have a  corresponding
+constant.
+
+=cut
+
+sub _tt ($self, $name, %args)
+{
+  state $cache;
+
+  my $template = $cache->{$name} //= do {
+    state $dss;
+    $dss //= Data::Section::Simple->new(__PACKAGE__);
+    $dss->get_data_section($name) // die "no such template: $name";
+  };
+
+  state $tt;
+
+  $tt //= Template->new;
+
+  my $output = '';
+  $args{self} = $self;
+  $tt->process(\$template, \%args, \$output) || die $tt->error;
+  $output;
+}
+
+# give a unique name for each lib
+sub _lib_name ($self, $name)
+{
+  state $counter = 0;
+  $counter++;
+  join '', $name, $$, $counter;
+}
+
+sub compute_expression_type ($self, $expression)
+{
+  my $source = Path::Tiny->tempfile(
+    TEMPLATE => "compute-expression-type-XXXXXX",
+    SUFFIX   => $self->lang eq 'c' ? '.c' : '.cxx',
+  );
+  $source->spew_utf8(
+    $self->_tt(
+      'compute-expression-type.c.tt',
+      expression => $expression,
+    )
+  );
+
+  my $libname = $self->_lib_name('cet');
+
+  my $build = FFI::Build->new(
+    $libname,
+    cflags => $self->extra_cflags,
+    export => ['compute_expression_type'],
+    source => ["$source"],
+  );
+
+  my $lib = $build->build;
+
+  my $ffi = FFI::Platypus->new(
+    api => 1,
+    lib => [$lib->path],
+  );
+
+  my $type = $ffi->function( 'compute_expression_type' => [] => 'string' )
+    ->call;
+
+  $build->clean;
+
+  $type;
+}
+
 no Moo;
 
 1;
+
+__DATA__
+
+@@ compute-expression-type.c.tt
+[% FOREACH header in self.headers %]
+#include <[% header %]>
+[% END %]
+const char *
+compute_expression_type()
+{
+  return _Generic(
+    [% expression %],
+    float    : "float",
+    double   : "double",
+    char *   : "string",
+    void *   : "pointer",
+    int      : "int",
+    long     : "long"
+  );
+}

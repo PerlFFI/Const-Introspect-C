@@ -11,10 +11,14 @@ my $post_diag;
 
 $modules{$_} = $_ for qw(
   Capture::Tiny
+  Data::Section::Simple
   ExtUtils::MakeMaker
+  FFI::Build
+  FFI::Platypus
   Moo
   Path::Tiny
   Ref::Util
+  Template
   Test2::V0
 );
 
