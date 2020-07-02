@@ -384,7 +384,7 @@ no Moo;
 __DATA__
 
 @@ compute-expression-type.c.tt
-[% FOREACH header in self.headers %]
+[% FOREACH header IN self.headers  %]
 #include <[% header %]>
 [% END %]
 const char *
@@ -402,7 +402,7 @@ compute_expression_type()
 }
 
 @@ compute-expression-value.c.tt
-[% FOREACH header in self.headers %]
+[% FOREACH header IN self.headers %]
 #include <[% header %]>
 [% END %]
 [% ctype %]
