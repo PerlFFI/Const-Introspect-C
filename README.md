@@ -71,6 +71,10 @@ need to specify this explicitly.
 Filter regular expression that all macro names must match.  This is `^[^_]` by default, which means
 all macros starting with an underscore are skipped.
 
+## diag
+
+List of diagnostic failures.
+
 # METHODS
 
 ## run

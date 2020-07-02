@@ -7,7 +7,7 @@ use Ref::Util qw( is_plain_arrayref );
 use Config;
 use Text::ParseWords ();
 use Path::Tiny ();
-use Capture::Tiny qw( capture );
+use Capture::Tiny qw( capture capture_merged );
 use Const::Introspect::C::Constant;
 use Data::Section::Simple ();
 use Template ();
@@ -159,6 +159,17 @@ has filter => (
   },
 );
 
+=head2 diag
+
+List of diagnostic failures.
+
+=cut
+
+has diag => (
+  is      => 'ro',
+  default => sub { [] },
+);
+
 =head1 METHODS
 
 =head2 run
@@ -189,8 +200,8 @@ sub run ($self)
 
   if($ret != 0 || $sig != 0)
   {
+    push $self->diag->@*, $err;
     # TODO: class exception here
-    print $err;
     die "command: @cmd failed";
   }
 
@@ -335,7 +346,16 @@ sub _build_from_template ($self, $name1, $name2, %args)
     source => ["$source"],
   );
 
-  my $lib = $build->build;
+  my($out, $lib, $error) = capture_merged {
+    local $@ = '';
+    my $lib = eval { $build->build };
+    ($lib, $@)
+  };
+
+  push $self->diag->@*, $out
+    if $out eq '';
+
+  die $error if $error;
 
   my $ffi = FFI::Platypus->new(
     api => 1,

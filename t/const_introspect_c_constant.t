@@ -1,4 +1,5 @@
 use Test2::V0 -no_srand => 1;
+use experimental qw( postderef );
 use Const::Introspect::C::Constant;
 
 subtest 'basic' => sub {
@@ -67,6 +68,8 @@ subtest 'fallback' => sub {
       call value => U();
     },
   );
+
+  note $_ for $c->diag->@*;
 
 };
 
