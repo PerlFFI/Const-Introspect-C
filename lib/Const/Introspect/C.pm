@@ -208,6 +208,7 @@ sub run ($self)
       if($value =~ /^-?([1-9][0-9]*|0[0-7]*)$/)
       {
         push @macros, Const::Introspect::C::Constant->new(
+          c         => $self,
           name      => $name,
           raw_value => $value,
           value     => int $value,
@@ -217,6 +218,7 @@ sub run ($self)
       elsif($value =~ /^"([a-z_0-9]+)"$/i)
       {
         push @macros, Const::Introspect::C::Constant->new(
+          c         => $self,
           name      => $name,
           raw_value => $value,
           value     => $1,
@@ -226,6 +228,7 @@ sub run ($self)
       elsif($value =~ /^([0-9]+\.[0-9]+)([Ff]{0,1})$/)
       {
         push @macros, Const::Introspect::C::Constant->new(
+          c         => $self,
           name      => $name,
           raw_value => $value,
           value     => $1,
@@ -235,6 +238,7 @@ sub run ($self)
       else
       {
         push @macros, Const::Introspect::C::Constant->new(
+          c         => $self,
           name      => $name,
           raw_value => $value,
         );
