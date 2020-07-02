@@ -1,29 +1,31 @@
 # Const::Introspect::C [![Build Status](https://travis-ci.org/PerlFFI/Const-Introspect-C.svg)](http://travis-ci.org/PerlFFI/Const-Introspect-C) ![windows](https://github.com/PerlFFI/Const-Introspect-C/workflows/windows/badge.svg) ![macos](https://github.com/PerlFFI/Const-Introspect-C/workflows/macos/badge.svg)
 
-Find and evaluate C/C++ macros from Perl
+Find and evaluate C/C++ constants for use in Perl
 
 # SYNOPSIS
 
 ```perl
 use Const::Introspect::C;
 
-my $macros = Const::Introspect::C->new(
+my $c = Const::Introspect::C->new(
   headers => ['foo.h'],
 );
 
-foreach my $macro ($macros->run)
+foreach my $const ($c->run)
 {
-  # macro isa Const::Introspect::C::Constant
-  say "name  = ", $macro->name;
-  say "type  = ", $macro->type; # one of: int, string, float, double or "other"
-  say "value = ", $macro->value;
+  # const isa Const::Introspect::C::Constant
+  say "name  = ", $const->name;
+  say "type  = ", $const->type; # one of: int, string, float, double or "other"
+  say "value = ", $const->value;
 }
 ```
 
 # DESCRIPTION
 
-This module provides an interface for finding C/C++ macros from header files, and
-computing their values.
+This module provides an interface for finding C/C++ constant style macros, and can
+compute their types and values.  It can also be used to compute the values of
+enumerated type constants, although this module doesn't have a way of finding
+the names (For that try something like [Clang::CastXML](https://metacpan.org/pod/Clang::CastXML)).
 
 # PROPERTIES
 
@@ -72,7 +74,7 @@ all macros starting with an underscore are skipped.
 ## run
 
 ```perl
-my @macros = $macros->run;
+my @const = $c->run;
 ```
 
 This generates the source file, runs the pre-processor, parses the macros as well as possible and
@@ -81,7 +83,7 @@ returns the result as a list of [Const::Introspect::C::Constant](https://metacpa
 ## compute\_expression\_type
 
 ```perl
-my $type = $macros->compute_expression_type($expression);
+my $type = $c->compute_expression_type($expression);
 ```
 
 This attempts to compute the type of the C `$expression`.  It should
@@ -93,7 +95,7 @@ constant.
 ## compute\_expression\_value
 
 ```perl
-my $value = $macros->compute_expression_value($type, $expression);
+my $value = $c->compute_expression_value($type, $expression);
 ```
 
 This method attempts to compute the value of the given C `$expression` of
