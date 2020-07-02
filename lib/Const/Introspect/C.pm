@@ -14,29 +14,31 @@ use Template ();
 use FFI::Platypus 1.00;
 use FFI::Build;
 
-# ABSTRACT: Find and evaluate C/C++ macros from Perl
+# ABSTRACT: Find and evaluate C/C++ constants for use in Perl
 # VERSION
 
 =head1 SYNOPSIS
 
  use Const::Introspect::C;
  
- my $macros = Const::Introspect::C->new(
+ my $c = Const::Introspect::C->new(
    headers => ['foo.h'],
  );
  
- foreach my $macro ($macros->run)
+ foreach my $const ($c->run)
  {
-   # macro isa Const::Introspect::C::Constant
-   say "name  = ", $macro->name;
-   say "type  = ", $macro->type; # one of: int, string, float, double or "other"
-   say "value = ", $macro->value;
+   # const isa Const::Introspect::C::Constant
+   say "name  = ", $const->name;
+   say "type  = ", $const->type; # one of: int, string, float, double or "other"
+   say "value = ", $const->value;
  }
 
 =head1 DESCRIPTION
 
-This module provides an interface for finding C/C++ macros from header files, and
-computing their values.
+This module provides an interface for finding C/C++ constant style macros, and can
+compute their types and values.  It can also be used to compute the values of
+enumerated type constants, although this module doesn't have a way of finding
+the names (For that try something like L<Clang::CastXML>).
 
 =head1 PROPERTIES
 
@@ -131,7 +133,7 @@ has source => (
   lazy    => 1,
   default => sub ($self) {
     my $p = Path::Tiny->tempfile(
-      TEMPLATE => 'c-macros-XXXXXX',
+      TEMPLATE => 'const-introspect-c-XXXXXX',
       SUFFIX   => $self->lang eq 'c' ? '.c' : '.cxx',
     );
     my $fh = $p->openw_utf8;
@@ -159,7 +161,7 @@ has filter => (
 
 =head2 run
 
- my @macros = $macros->run;
+ my @const = $c->run;
 
 This generates the source file, runs the pre-processor, parses the macros as well as possible and
 returns the result as a list of L<Const::Introspect::C::Constant> instances.
@@ -249,7 +251,7 @@ sub run ($self)
 
 =head2 compute_expression_type
 
- my $type = $macros->compute_expression_type($expression);
+ my $type = $c->compute_expression_type($expression);
 
 This attempts to compute the type of the C C<$expression>.  It should
 return one of C<int>, C<long>, C<string>, C<float>, C<double>, or C<other>.
@@ -337,7 +339,7 @@ sub compute_expression_type ($self, $expression)
 
 =head2 compute_expression_value
 
- my $value = $macros->compute_expression_value($type, $expression);
+ my $value = $c->compute_expression_value($type, $expression);
 
 This method attempts to compute the value of the given C C<$expression> of
 the given C<$type>.  C<$type> should be one of  C<int>, C<long>, C<string>,
