@@ -1,4 +1,4 @@
-package C::Macros;
+package Const::Introspect::C;
 
 use Moo;
 use 5.020;
@@ -8,7 +8,7 @@ use Config;
 use Text::ParseWords ();
 use Path::Tiny ();
 use Capture::Tiny qw( capture );
-use C::Macros::Macro;
+use Const::Introspect::C::Constant;
 use Data::Section::Simple ();
 use Template ();
 use FFI::Platypus 1.00;
@@ -19,15 +19,15 @@ use FFI::Build;
 
 =head1 SYNOPSIS
 
- use C::Macros;
+ use Const::Introspect::C;
  
- my $macros = C::Macros->new(
+ my $macros = Const::Introspect::C->new(
    headers => ['foo.h'],
  );
  
  foreach my $macro ($macros->run)
  {
-   # macro isa C::Macros::Macro
+   # macro isa Const::Introspect::C::Constant
    say "name  = ", $macro->name;
    say "type  = ", $macro->type; # one of: int, string, float, double or "other"
    say "value = ", $macro->value;
@@ -162,7 +162,7 @@ has filter => (
  my @macros = $macros->run;
 
 This generates the source file, runs the pre-processor, parses the macros as well as possible and
-returns the result as a list of L<C::Macros::Macro> instances.
+returns the result as a list of L<Const::Introspect::C::Constant> instances.
 
 =cut
 
@@ -205,7 +205,7 @@ sub run ($self)
 
       if($value =~ /^-?([1-9][0-9]*|0[0-7]*)$/)
       {
-        push @macros, C::Macros::Macro->new(
+        push @macros, Const::Introspect::C::Constant->new(
           name      => $name,
           raw_value => $value,
           value     => int $value,
@@ -214,7 +214,7 @@ sub run ($self)
       }
       elsif($value =~ /^"([a-z_0-9]+)"$/i)
       {
-        push @macros, C::Macros::Macro->new(
+        push @macros, Const::Introspect::C::Constant->new(
           name      => $name,
           raw_value => $value,
           value     => $1,
@@ -223,7 +223,7 @@ sub run ($self)
       }
       elsif($value =~ /^([0-9]+\.[0-9]+)([Ff]{0,1})$/)
       {
-        push @macros, C::Macros::Macro->new(
+        push @macros, Const::Introspect::C::Constant->new(
           name      => $name,
           raw_value => $value,
           value     => $1,
@@ -232,7 +232,7 @@ sub run ($self)
       }
       else
       {
-        push @macros, C::Macros::Macro->new(
+        push @macros, Const::Introspect::C::Constant->new(
           name      => $name,
           raw_value => $value,
         );

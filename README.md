@@ -1,19 +1,19 @@
-# C::Macros [![Build Status](https://travis-ci.org/PerlFFI/C-Macros.svg)](http://travis-ci.org/PerlFFI/C-Macros) ![windows](https://github.com/PerlFFI/C-Macros/workflows/windows/badge.svg) ![macos](https://github.com/PerlFFI/C-Macros/workflows/macos/badge.svg)
+# Const::Introspect::C [![Build Status](https://travis-ci.org/PerlFFI/Const-Introspect-C.svg)](http://travis-ci.org/PerlFFI/Const-Introspect-C) ![windows](https://github.com/PerlFFI/Const-Introspect-C/workflows/windows/badge.svg) ![macos](https://github.com/PerlFFI/Const-Introspect-C/workflows/macos/badge.svg)
 
 Find and evaluate C/C++ macros from Perl
 
 # SYNOPSIS
 
 ```perl
-use C::Macros;
+use Const::Introspect::C;
 
-my $macros = C::Macros->new(
+my $macros = Const::Introspect::C->new(
   headers => ['foo.h'],
 );
 
 foreach my $macro ($macros->run)
 {
-  # macro isa C::Macros::Macro
+  # macro isa Const::Introspect::C::Constant
   say "name  = ", $macro->name;
   say "type  = ", $macro->type; # one of: int, string, float, double or "other"
   say "value = ", $macro->value;
@@ -76,7 +76,7 @@ my @macros = $macros->run;
 ```
 
 This generates the source file, runs the pre-processor, parses the macros as well as possible and
-returns the result as a list of [C::Macros::Macro](https://metacpan.org/pod/C::Macros::Macro) instances.
+returns the result as a list of [Const::Introspect::C::Constant](https://metacpan.org/pod/Const::Introspect::C::Constant) instances.
 
 ## compute\_expression\_type
 

@@ -1,4 +1,4 @@
-package C::Macros::Macro;
+package Const::Introspect::C::Constant;
 
 use 5.020;
 use Moo;
@@ -8,7 +8,7 @@ use Moo;
 
 =head1 DESCRIPTION
 
-This class represents a single C/C++ pre-processor macro.  See L<C::Macros> for the
+This class represents a single C/C++ pre-processor macro.  See L<Const::Introspect::C> for the
 interface for getting a list of these macros.
 
 =head1 PROPERTIES
