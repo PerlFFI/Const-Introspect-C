@@ -206,31 +206,35 @@ sub run ($self)
       if($value =~ /^-?([1-9][0-9]*|0[0-7]*)$/)
       {
         push @macros, C::Macros::Macro->new(
-          name  => $name,
-          value => int $value,
-          type  => 'int',
+          name      => $name,
+          raw_value => $value,
+          value     => int $value,
+          type      => 'int',
         )
       }
       elsif($value =~ /^"([a-z_0-9]+)"$/i)
       {
         push @macros, C::Macros::Macro->new(
-          name  => $name,
-          value => $1,
-          type  => 'string',
+          name      => $name,
+          raw_value => $value,
+          value     => $1,
+          type       => 'string',
         )
       }
       elsif($value =~ /^([0-9]+\.[0-9]+)([Ff]{0,1})$/)
       {
         push @macros, C::Macros::Macro->new(
-          name  => $name,
-          value => $1,
-          type  => $2 ? 'float' : 'double',
+          name      => $name,
+          raw_value => $value,
+          value     => $1,
+          type      => $2 ? 'float' : 'double',
         );
       }
       else
       {
         push @macros, C::Macros::Macro->new(
-          name  => $name,
+          name      => $name,
+          raw_value => $value,
         );
       }
     }
