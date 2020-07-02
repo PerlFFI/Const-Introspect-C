@@ -71,4 +71,22 @@ subtest 'compute expression type' => sub {
 
 };
 
+subtest 'compute expression value' => sub {
+
+  my @tests = (
+    [ '1+3'       => 'int',     4       ],
+    [ '"foo"'     => 'string',  'foo' ],
+    [ '1L'        => 'long',    1       ],
+    [ '(void*)0L' => 'pointer', U()     ],
+  );
+
+  is(
+    C::Macros->new,
+    object {
+      call [ compute_expression_value => $_->[1], $_->[0] ] => $_->[2] for @tests;
+    },
+  );
+
+};
+
 done_testing;

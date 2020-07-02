@@ -90,6 +90,19 @@ If the type cannot be determined then `other` will be returned, and
 often indicates a code macro that doesn't have a  corresponding
 constant.
 
+## compute\_expression\_value
+
+```perl
+my $value = $macros->compute_expression_value($type, $expression);
+```
+
+This method attempts to compute the value of the given C `$expression` of
+the given `$type`.  `$type` should be one of  `int`, `long`, `string`,
+`float`, or `double`.
+
+If you do not know the expression type, you can try to compute the type
+using `compute_expression_type` above.
+
 # AUTHOR
 
 Graham Ollis <plicease@cpan.org>

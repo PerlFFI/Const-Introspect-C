@@ -283,25 +283,25 @@ sub _lib_name ($self, $name)
   join '', $name, $$, $counter;
 }
 
-sub compute_expression_type ($self, $expression)
+sub _build_from_template ($self, $name1, $name2, %args)
 {
   my $source = Path::Tiny->tempfile(
-    TEMPLATE => "compute-expression-type-XXXXXX",
+    TEMPLATE => "$name1-XXXXXX",
     SUFFIX   => $self->lang eq 'c' ? '.c' : '.cxx',
   );
   $source->spew_utf8(
     $self->_tt(
-      'compute-expression-type.c.tt',
-      expression => $expression,
+      "$name1.c.tt",
+      %args,
     )
   );
 
-  my $libname = $self->_lib_name('cet');
+  my $libname = $self->_lib_name($name2);
 
   my $build = FFI::Build->new(
     $libname,
     cflags => $self->extra_cflags,
-    export => ['compute_expression_type'],
+    export => [$name1 =~ s/-/_/gr],
     source => ["$source"],
   );
 
@@ -312,12 +312,59 @@ sub compute_expression_type ($self, $expression)
     lib => [$lib->path],
   );
 
+  ($ffi, $build)
+}
+
+sub compute_expression_type ($self, $expression)
+{
+  my($ffi, $build) = $self->_build_from_template(
+    'compute-expression-type',
+    'cet',
+    expression => $expression,
+  );
+
   my $type = $ffi->function( 'compute_expression_type' => [] => 'string' )
     ->call;
 
   $build->clean;
 
   $type;
+}
+
+=head2 compute_expression_value
+
+ my $value = $macros->compute_expression_value($type, $expression);
+
+This method attempts to compute the value of the given C C<$expression> of
+the given C<$type>.  C<$type> should be one of  C<int>, C<long>, C<string>,
+C<float>, or C<double>.
+
+If you do not know the expression type, you can try to compute the type
+using C<compute_expression_type> above.
+
+=cut
+
+sub compute_expression_value ($self, $type, $expression)
+{
+  my $ctype = $type;
+  $ctype = 'const char *' if $type eq 'string';
+  $ctype = 'void *' if $type eq 'pointer';
+  my $ffitype = $type;
+  $ffitype = 'opaque' if $type eq 'pointer';
+
+  my($ffi, $build) = $self->_build_from_template(
+    'compute-expression-value',
+    'cev',
+    ctype      => $ctype,
+    expression => $expression,
+  );
+
+  my $value = $ffi->function( 'compute_expression_value' => [] => $ffitype )
+    ->call;
+
+  $build->clean;
+
+  $value;
 }
 
 no Moo;
@@ -342,4 +389,14 @@ compute_expression_type()
     int      : "int",
     long     : "long"
   );
+}
+
+@@ compute-expression-value.c.tt
+[% FOREACH header in self.headers %]
+#include <[% header %]>
+[% END %]
+[% ctype %]
+compute_expression_value()
+{
+  return [% expression %];
 }
