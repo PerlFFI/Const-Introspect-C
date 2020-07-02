@@ -419,6 +419,18 @@ sub compute_expression_value ($self, $type, $expression)
 
 no Moo;
 
+=head1 CAVEATS
+
+This modules requires the C pre-processor for macro constants, and for many constants
+requires a compiler to compute the type and value.  The techniques used by this module
+work with C<clang> and C<gcc>, but they probably don't work with other compilers.
+Patches welcome to support other compilers.
+
+This module can tell you the value of pointer constants, but there is not much utility
+to the value of non C<NULL> values.
+
+=cut
+
 1;
 
 __DATA__
