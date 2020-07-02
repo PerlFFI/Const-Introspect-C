@@ -24,6 +24,19 @@ has name => (
   required => 1,
 );
 
+=head2 raw_value
+
+The value of the macro as seen in the header file.  This may be an expression
+and thus unusable as a constant value, but it may also be useful for diagnostics.
+
+If the raw value is unknown this will be C<undef>.
+
+=cut
+
+has raw_value => (
+  is => 'ro',
+);
+
 =head2 value
 
 The value of the macro.  The representation may depend on the C<type>, or for
