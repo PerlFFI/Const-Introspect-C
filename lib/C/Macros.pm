@@ -196,6 +196,7 @@ sub run ($self)
     {
       my $name = $1;
       my $value = $2;
+      next if $name =~ /[()]/;
       next unless $name =~ $filter;
 
       if($value =~ /^-?([1-9][0-9]*|0[0-7]*)$/)
