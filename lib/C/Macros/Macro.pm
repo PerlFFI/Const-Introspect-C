@@ -42,7 +42,7 @@ has value => (
 
 =head2 type
 
-The macro type.  This will be one of: C<string>, C<integer>, C<float>,
+The macro type.  This will be one of: C<string>, C<int>, C<long>, C<pointer>, C<float>,
 C<double> or C<other>.
 
 =cut
@@ -50,8 +50,8 @@ C<double> or C<other>.
 has type => (
   is       => 'ro',
   isa      => sub {
-    die "type should be one of: string, integer, float, double or other"
-      unless $_[0] =~ /^(string|integer|float|double|other)$/;
+    die "type should be one of: string, int, long, pointer, float, double or other"
+      unless $_[0] =~ /^(string|int|long|pointer|float|double|other)$/;
   },
   lazy     => 1,
   default  => sub {

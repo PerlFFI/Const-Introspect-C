@@ -18,7 +18,7 @@ subtest 'basic' => sub {
       field FOO1 => object {
         call [ isa => 'C::Macros::Macro' ] => T();
         call name => 'FOO1';
-        call type => 'integer';
+        call type => 'int';
         call value => 1;
       };
       field FOO2 => object {
@@ -49,6 +49,26 @@ subtest 'basic' => sub {
 
 };
 
+subtest 'compute expression type' => sub {
+
+  my @tests = (
+    [ 1           => 'int'     ],
+    [ '1+2'       => 'int'     ],
+    [ '"foo"'     => 'string'  ],
+    [ '1.4f'      => 'float'   ],
+    [ '1.4'       => 'double'  ],
+    [ '(void*)0'  => 'pointer' ],
+    [ "'a'"       => 'int'     ],
+    [ '1L'        => 'long'    ],
+  );
+
+  is(
+    C::Macros->new,
+    object {
+      call [ compute_expression_type => $_->[0] ] => $_->[1] for @tests;
+    },
+  );
+
+};
+
 done_testing;
-
-

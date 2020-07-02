@@ -15,7 +15,7 @@ foreach my $macro ($macros->run)
 {
   # macro isa C::Macros::Macro
   say "name  = ", $macro->name;
-  say "type  = ", $macro->type; # one of: integer, string, float, double or "other"
+  say "type  = ", $macro->type; # one of: int, string, float, double or "other"
   say "value = ", $macro->value;
 }
 ```
@@ -77,6 +77,18 @@ my @macros = $macros->run;
 
 This generates the source file, runs the pre-processor, parses the macros as well as possible and
 returns the result as a list of [C::Macros::Macro](https://metacpan.org/pod/C::Macros::Macro) instances.
+
+## compute\_expression\_type
+
+```perl
+my $type = $macros->compute_expression_type($expression);
+```
+
+This attempts to compute the type of the C `$expression`.  It should
+return one of `int`, `long`, `string`, `float`, `double`, or `other`.
+If the type cannot be determined then `other` will be returned, and
+often indicates a code macro that doesn't have a  corresponding
+constant.
 
 # AUTHOR
 
