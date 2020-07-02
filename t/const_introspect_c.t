@@ -49,6 +49,56 @@ subtest 'basic' => sub {
 
 };
 
+subtest 'enum' => sub {
+
+  is(
+    Const::Introspect::C->new(
+      headers => ['enum.h'],
+      extra_cflags => ['-Icorpus/include'],
+    ),
+    object {
+      call [ isa => 'Const::Introspect::C' ] => T();
+      call [ get_single => 'ZERO' ] => object {
+        call [ isa => 'Const::Introspect::C::Constant' ] => T();
+        call name => 'ZERO';
+        call type => 'int';
+        call value => 0;
+      };
+      call [ get_single => 'ONE' ] => object {
+        call [ isa => 'Const::Introspect::C::Constant' ] => T();
+        call name => 'ONE';
+        call type => 'int';
+        call value => 1;
+      };
+      call [ get_single => 'TWO' ] => object {
+        call [ isa => 'Const::Introspect::C::Constant' ] => T();
+        call name => 'TWO';
+        call type => 'int';
+        call value => 2;
+      };
+      call [ get_single => 'THREE' ] => object {
+        call [ isa => 'Const::Introspect::C::Constant' ] => T();
+        call name => 'THREE';
+        call type => 'other';
+        call value => U();
+      };
+      call [ get_single => 'FOUR' ] => object {
+        call [ isa => 'Const::Introspect::C::Constant' ] => T();
+        call name => 'FOUR';
+        call type => 'int';
+        call value => 4;
+      };
+      call [ get_single => 'DEFAULT' ] => object {
+        call [ isa => 'Const::Introspect::C::Constant' ] => T();
+        call name => 'DEFAULT';
+        call type => 'int';
+        call value => 4;
+      };
+    },
+  );
+
+};
+
 subtest 'compute expression type' => sub {
 
   my @tests = (

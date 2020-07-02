@@ -15,7 +15,9 @@ foreach my $const ($c->run)
 {
   # const isa Const::Introspect::C::Constant
   say "name  = ", $const->name;
-  say "type  = ", $const->type; # one of: int, string, float, double or "other"
+  # type is one of: int, long, pointer, string,
+  #                 float, double or "other"
+  say "type  = ", $const->type;
   say "value = ", $const->value;
 }
 ```
@@ -79,6 +81,16 @@ my @const = $c->run;
 
 This generates the source file, runs the pre-processor, parses the macros as well as possible and
 returns the result as a list of [Const::Introspect::C::Constant](https://metacpan.org/pod/Const::Introspect::C::Constant) instances.
+
+## get\_single
+
+```perl
+my $const = $c->get_single($name);
+```
+
+Get a single constant by the name of `$name`.  Returns an instance of
+[Const::Introspect::C](https://metacpan.org/pod/Const::Introspect::C).  This is most useful for getting the integer
+values for named enumerated values.
 
 ## compute\_expression\_type
 

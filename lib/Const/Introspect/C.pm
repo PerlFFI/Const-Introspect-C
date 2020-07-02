@@ -29,7 +29,9 @@ use FFI::Build;
  {
    # const isa Const::Introspect::C::Constant
    say "name  = ", $const->name;
-   say "type  = ", $const->type; # one of: int, string, float, double or "other"
+   # type is one of: int, long, pointer, string,
+   #                 float, double or "other"
+   say "type  = ", $const->type;
    say "value = ", $const->value;
  }
 
@@ -251,6 +253,24 @@ sub run ($self)
   }
 
   @macros;
+}
+
+=head2 get_single
+
+ my $const = $c->get_single($name);
+
+Get a single constant by the name of C<$name>.  Returns an instance of
+L<Const::Introspect::C>.  This is most useful for getting the integer
+values for named enumerated values.
+
+=cut
+
+sub get_single ($self, $name)
+{
+  Const::Introspect::C::Constant->new(
+    c    => $self,
+    name => $name,
+  );
 }
 
 =head2 compute_expression_type
