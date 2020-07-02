@@ -13,6 +13,17 @@ interface for getting a list of these constants from a header file.
 
 =head1 PROPERTIES
 
+=head2 c
+
+The L<Const::Introspect::C> instance.
+
+=cut
+
+has c => (
+  is       => 'ro',
+  required => 1,
+);
+
 =head2 name
 
 The name of the constant.
