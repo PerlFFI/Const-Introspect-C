@@ -14,6 +14,7 @@ subtest 'basic' => sub {
   is(
     \%macros,
     hash {
+      field 'FOO(x)' => DNE();
       field FOO1 => object {
         call [ isa => 'C::Macros::Macro' ] => T();
         call name => 'FOO1';
