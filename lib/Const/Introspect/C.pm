@@ -25,7 +25,7 @@ use FFI::Build;
    headers => ['foo.h'],
  );
  
- foreach my $const ($c->run)
+ foreach my $const ($c->get_macro_constants)
  {
    # const isa Const::Introspect::C::Constant
    say "name  = ", $const->name;
@@ -36,6 +36,8 @@ use FFI::Build;
  }
 
 =head1 DESCRIPTION
+
+B<Note>: This is an early release, expect some interface changes in the near future.
 
 This module provides an interface for finding C/C++ constant style macros, and can
 compute their types and values.  It can also be used to compute the values of
@@ -172,16 +174,16 @@ has diag => (
 
 =head1 METHODS
 
-=head2 run
+=head2 get_macro_constants
 
- my @const = $c->run;
+ my @const = $c->get_macro_constants;
 
 This generates the source file, runs the pre-processor, parses the macros as well as possible and
 returns the result as a list of L<Const::Introspect::C::Constant> instances.
 
 =cut
 
-sub run ($self)
+sub get_macro_constants ($self)
 {
   my @cmd = (
     map { $_->@* }

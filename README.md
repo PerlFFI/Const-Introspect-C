@@ -11,7 +11,7 @@ my $c = Const::Introspect::C->new(
   headers => ['foo.h'],
 );
 
-foreach my $const ($c->run)
+foreach my $const ($c->get_macro_constants)
 {
   # const isa Const::Introspect::C::Constant
   say "name  = ", $const->name;
@@ -23,6 +23,8 @@ foreach my $const ($c->run)
 ```
 
 # DESCRIPTION
+
+**Note**: This is an early release, expect some interface changes in the near future.
 
 This module provides an interface for finding C/C++ constant style macros, and can
 compute their types and values.  It can also be used to compute the values of
@@ -77,10 +79,10 @@ List of diagnostic failures.
 
 # METHODS
 
-## run
+## get\_macro\_constants
 
 ```perl
-my @const = $c->run;
+my @const = $c->get_macro_constants;
 ```
 
 This generates the source file, runs the pre-processor, parses the macros as well as possible and
