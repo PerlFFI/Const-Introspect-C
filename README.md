@@ -121,6 +121,16 @@ the given `$type`.  `$type` should be one of  `int`, `long`, `string`,
 If you do not know the expression type, you can try to compute the type
 using `compute_expression_type` above.
 
+# CAVEATS
+
+This modules requires the C pre-processor for macro constants, and for many constants
+requires a compiler to compute the type and value.  The techniques used by this module
+work with `clang` and `gcc`, but they probably don't work with other compilers.
+Patches welcome to support other compilers.
+
+This module can tell you the value of pointer constants, but there is not much utility
+to the value of non `NULL` values.
+
 # AUTHOR
 
 Graham Ollis <plicease@cpan.org>
