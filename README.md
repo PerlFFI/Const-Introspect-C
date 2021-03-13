@@ -1,4 +1,4 @@
-# Const::Introspect::C [![Build Status](https://travis-ci.org/PerlFFI/Const-Introspect-C.svg)](http://travis-ci.org/PerlFFI/Const-Introspect-C) ![windows](https://github.com/PerlFFI/Const-Introspect-C/workflows/windows/badge.svg) ![macos](https://github.com/PerlFFI/Const-Introspect-C/workflows/macos/badge.svg)
+# Const::Introspect::C ![linux](https://github.com/PerlFFI/Const-Introspect-C/workflows/linux/badge.svg) ![windows](https://github.com/PerlFFI/Const-Introspect-C/workflows/windows/badge.svg) ![macos](https://github.com/PerlFFI/Const-Introspect-C/workflows/macos/badge.svg)
 
 Find and evaluate C/C++ constants for use in Perl
 
