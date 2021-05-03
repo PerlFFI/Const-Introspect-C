@@ -89,8 +89,8 @@ has cc => (
 =head2 ppflags
 
 The C pre-processor flags.  This may change in the future, or on some platforms, but as of
-this writing this is C<-dM -E -x c> for C and C<-dM -E -x c++> for C++.  This must be an
-array reference.
+this writing this is C<< ['-dM', '-E', '-x', 'c'] >> for C and C<< ['-dM', '-E', '-x', 'c++'] >>
+for C++.  This must be an array reference.
 
 =cut
 
@@ -273,7 +273,7 @@ sub get_macro_constants ($self)
  my $const = $c->get_single($name);
 
 Get a single constant by the name of C<$name>.  Returns an instance of
-L<Const::Introspect::C>.  This is most useful for getting the integer
+L<Const::Introspect::C::Constant>.  This is most useful for getting the integer
 values for named enumerated values.
 
 =cut

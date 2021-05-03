@@ -51,8 +51,8 @@ This allows for `cc` with spaces in it.
 ## ppflags
 
 The C pre-processor flags.  This may change in the future, or on some platforms, but as of
-this writing this is `-dM -E -x c` for C and `-dM -E -x c++` for C++.  This must be an
-array reference.
+this writing this is `['-dM', '-E', '-x', 'c']` for C and `['-dM', '-E', '-x', 'c++']`
+for C++.  This must be an array reference.
 
 ## cflags
 
@@ -95,7 +95,7 @@ my $const = $c->get_single($name);
 ```
 
 Get a single constant by the name of `$name`.  Returns an instance of
-[Const::Introspect::C](https://metacpan.org/pod/Const::Introspect::C).  This is most useful for getting the integer
+[Const::Introspect::C::Constant](https://metacpan.org/pod/Const::Introspect::C::Constant).  This is most useful for getting the integer
 values for named enumerated values.
 
 ## compute\_expression\_type
